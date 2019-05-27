@@ -13,6 +13,8 @@ interrupt void sc(void){
     RESTORE_SP();
 }
 
+// testando git.
+
 cpu_t *stk_os;
 
 cpu_t *prepare_stk(void *task, cpu_t *stk, int stk_size){
