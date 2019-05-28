@@ -28,7 +28,7 @@ _startupData is allocated at 0x2104 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
   _Range   pZeroOut       0x300     474
-  _Copy    *toCopyDownBeg 0x23BE
+  _Copy    *toCopyDownBeg 0x24B7
 } _startupData;
 
 *********************************************************************************************
@@ -39,8 +39,8 @@ Section Name                    Size  Type     From       To       Segment
 .init                            132     R     0x2080     0x2103   ROM
 .startData                        26     R     0x2104     0x211D   ROM
 NON_BANKED                         1     R     0x211E     0x211E   ROM
-.text                            671     R     0x211F     0x23BD   ROM
-.copy                              2     R     0x23BE     0x23BF   ROM
+.text                            920     R     0x211F     0x24B6   ROM
+.copy                              2     R     0x24B7     0x24B8   ROM
 .abs_section_0                     1   N/I        0x0        0x0   .absSeg0
 .abs_section_1                     1   N/I        0x1        0x1   .absSeg1
 .abs_section_2                     1   N/I        0x2        0x2   .absSeg2
@@ -228,7 +228,7 @@ NON_BANKED                         1     R     0x211E     0x211E   ROM
 .common                          466   R/W      0x308      0x4D9   RAM
 
 Summary of section sizes per section type:
-READ_ONLY (R):         382 (dec:      898)
+READ_ONLY (R):         47B (dec:     1147)
 READ_WRITE (R/W):      3DA (dec:      986)
 NO_INIT (N/I):          CF (dec:      207)
 
@@ -245,17 +245,23 @@ MODULE:                 -- main.c.o --
 - PROCEDURES:
      task1                                     211F      1A      26       1   .text       
      task2                                     2139      1A      26       1   .text       
-     main                                      2153      35      53       1   .text       
+     idle                                      2153       2       2       1   .text       
+     main                                      2155      43      67       1   .text       
 - VARIABLES:
      stk1                                       308      80     128       1   .common     
      stk2                                       388      80     128       1   .common     
+     stk_idle                                   408      80     128       1   .common     
 MODULE:                 -- RTSHC08.C.o (ansiis.lib) --
 - PROCEDURES:
-     _PUSH_ARGS_L                              2188      20      32       1   .text       
-     _ENTER_BINARY_L                           21A8      16      22       1   .text       
-     _LADD_k_is_k_plus_j                       21BE      1F      31       1   .text       
-     _LADD                                     21DD       6       6       1   .text       
-     _POP32                                    21E3      1A      26       1   .text       
+     _PUSH_ARGS_L                              2198      20      32       1   .text       
+     _ENTER_UNARY_L                            21B8      29      41       1   .text       
+     _ENTER_BINARY_L                           21E1      16      22       2   .text       
+     _LADD_k_is_k_plus_j                       21F7      1F      31       1   .text       
+     _LCMP_k_rel_j                             2216      1F      31       1   .text       
+     _LINC                                     2235      16      22       1   .text       
+     _LADD                                     224B       6       6       1   .text       
+     _LCMP                                     2251       6       6       1   .text       
+     _POP32                                    2257      1A      26       2   .text       
 - VARIABLES:
 MODULE:                 -- MC9S08QE128.C.o --
 - PROCEDURES:
@@ -314,7 +320,7 @@ MODULE:                 -- MC9S08QE128.C.o --
      _KBI2SC                                     3C       1       1       0   .abs_section_3c
      _KBI2PE                                     3D       1       1       0   .abs_section_3d
      _KBI2ES                                     3E       1       1       0   .abs_section_3e
-     _TPM1SC                                     40       1       1       2   .abs_section_40
+     _TPM1SC                                     40       1       1       3   .abs_section_40
      _TPM1C0SC                                   45       1       1       0   .abs_section_45
      _TPM1C1SC                                   48       1       1       0   .abs_section_48
      _TPM1C2SC                                   4B       1       1       0   .abs_section_4b
@@ -451,7 +457,7 @@ MODULE:                 -- Start08.c.o --
      __SEG_END_SSTACK                           300       0       0       1               
 MODULE:                 -- MCUinit.c.o --
 - PROCEDURES:
-     MCU_init                                  21FD      82     130       1   .text       
+     MCU_init                                  2271      82     130       1   .text       
      isrVlvd                                   211E       1       1       1   NON_BANKED  
 - VARIABLES:
      NVPROT_INIT                               FFBD       1       1       0   .abs_section_ffbd
@@ -459,43 +465,46 @@ MODULE:                 -- MCUinit.c.o --
      _vect                                     FFC0      40      64       0   .abs_section_ffc0
 MODULE:                 -- port.c.o --
 - PROCEDURES:
-     sc                                        227F      3F      63       1   .text       
-     prepare_stk                               22BE      5B      91       1   .text       
-     init_timer                                2319       B      11       1   .text       
+     sc                                        22F3      21      33       1   .text       
+     prepare_stk                               2314      5B      91       1   .text       
+     init_timer                                236F       B      11       1   .text       
+     ticktimer                                 237A      29      41       1   .text       
 - VARIABLES:
-     stk_os                                     408       2       2       5   .common     
+     stk_os                                     488       2       2       9   .common     
 MODULE:                 -- os.c.o --
 - PROCEDURES:
-     idle                                      2324       2       2       1   .text       
-     install_task                              2326      44      68       3   .text       
-     start_os                                  236A      20      32       1   .text       
-     delay                                     238A      34      52       2   .text       
+     install_task                              23A3      45      69       3   .text       
+     start_os                                  23E8       C      12       1   .text       
+     delay                                     23F4      34      52       2   .text       
+     os_inc_and_compare                        2428      4C      76       1   .text       
+     scheduler                                 2474      43      67       2   .text       
 - VARIABLES:
-     it                                         300       2       2       4   .bss        
-     ct                                         302       2       2       8   .bss        
-     os_time                                    304       4       4       1   .bss        
-     tcb                                        40A      50      80      11   .common     
-     stk_idle                                   45A      80     128       1   .common     
+     it                                         300       2       2       5   .bss        
+     ct                                         302       2       2       6   .bss        
+     os_time                                    304       4       4       3   .bss        
+     tcb                                        48A      50      80      19   .common     
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.c.o                                   256    105      0
-  RTSHC08.C.o (ansiis.lib)                     0    117      0
+  main.c.o                                   384    121      0
+  RTSHC08.C.o (ansiis.lib)                     0    217      0
   MC9S08QE128.C.o                            207      0      0
   Start08.c.o                                  0    132      0
   MCUinit.c.o                                  0    131     66
-  port.c.o                                     2    165      0
-  os.c.o                                     216    154      0
+  port.c.o                                     2    176      0
+  os.c.o                                      88    276      0
   other                                      512     26      2
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  task1 task2 main _PUSH_ARGS_L _ENTER_BINARY_L _LADD_k_is_k_plus_j _LADD 
-  _POP32 MCU_init sc prepare_stk init_timer idle install_task start_os delay 
+  task1 task2 idle main _PUSH_ARGS_L _ENTER_UNARY_L _ENTER_BINARY_L 
+  _LADD_k_is_k_plus_j _LCMP_k_rel_j _LINC _LADD _LCMP _POP32 MCU_init sc 
+  prepare_stk init_timer ticktimer install_task start_os delay 
+  os_inc_and_compare scheduler 
 SECTION: ".bss"
   it ct os_time 
 SECTION: ".init"
@@ -503,7 +512,7 @@ SECTION: ".init"
 SECTION: "NON_BANKED"
   isrVlvd 
 SECTION: ".common"
-  stk1 stk2 stk_os tcb stk_idle 
+  stk1 stk2 stk_idle stk_os tcb 
 SECTION: ".abs_section_0"
   _PTAD 
 SECTION: ".abs_section_1"
@@ -932,7 +941,7 @@ OBJECT LIST SORTED BY ADDRESS
      _KBI2SC                                     3C       1       1       0   .abs_section_3c
      _KBI2PE                                     3D       1       1       0   .abs_section_3d
      _KBI2ES                                     3E       1       1       0   .abs_section_3e
-     _TPM1SC                                     40       1       1       2   .abs_section_40
+     _TPM1SC                                     40       1       1       3   .abs_section_40
      _TPM1CNT                                    41       2       2       0   .abs_section_41
      _TPM1MOD                                    43       2       2       1   .abs_section_43
      _TPM1C0SC                                   45       1       1       0   .abs_section_45
@@ -973,14 +982,14 @@ OBJECT LIST SORTED BY ADDRESS
      _LBP                                        7D       1       1       0   .abs_section_7d
      _LB                                         7E       1       1       0   .abs_section_7e
      _LAPAB                                      7F       1       1       0   .abs_section_7f
-     it                                         300       2       2       4   .bss        
-     ct                                         302       2       2       8   .bss        
-     os_time                                    304       4       4       1   .bss        
+     it                                         300       2       2       5   .bss        
+     ct                                         302       2       2       6   .bss        
+     os_time                                    304       4       4       3   .bss        
      stk1                                       308      80     128       1   .common     
      stk2                                       388      80     128       1   .common     
-     stk_os                                     408       2       2       5   .common     
-     tcb                                        40A      50      80      11   .common     
-     stk_idle                                   45A      80     128       1   .common     
+     stk_idle                                   408      80     128       1   .common     
+     stk_os                                     488       2       2       9   .common     
+     tcb                                        48A      50      80      19   .common     
      _SRS                                      1800       1       1       0   .abs_section_1800
      _SBDFR                                    1801       1       1       0   .abs_section_1801
      _SOPT1                                    1802       1       1       1   .abs_section_1802
@@ -1069,20 +1078,27 @@ OBJECT LIST SORTED BY ADDRESS
      isrVlvd                                   211E       1       1       1   NON_BANKED  
      task1                                     211F      1A      26       1   .text       
      task2                                     2139      1A      26       1   .text       
-     main                                      2153      35      53       1   .text       
-     _PUSH_ARGS_L                              2188      20      32       1   .text       
-     _ENTER_BINARY_L                           21A8      16      22       1   .text       
-     _LADD_k_is_k_plus_j                       21BE      1F      31       1   .text       
-     _LADD                                     21DD       6       6       1   .text       
-     _POP32                                    21E3      1A      26       1   .text       
-     MCU_init                                  21FD      82     130       1   .text       
-     sc                                        227F      3F      63       1   .text       
-     prepare_stk                               22BE      5B      91       1   .text       
-     init_timer                                2319       B      11       1   .text       
-     idle                                      2324       2       2       1   .text       
-     install_task                              2326      44      68       3   .text       
-     start_os                                  236A      20      32       1   .text       
-     delay                                     238A      34      52       2   .text       
+     idle                                      2153       2       2       1   .text       
+     main                                      2155      43      67       1   .text       
+     _PUSH_ARGS_L                              2198      20      32       1   .text       
+     _ENTER_UNARY_L                            21B8      29      41       1   .text       
+     _ENTER_BINARY_L                           21E1      16      22       2   .text       
+     _LADD_k_is_k_plus_j                       21F7      1F      31       1   .text       
+     _LCMP_k_rel_j                             2216      1F      31       1   .text       
+     _LINC                                     2235      16      22       1   .text       
+     _LADD                                     224B       6       6       1   .text       
+     _LCMP                                     2251       6       6       1   .text       
+     _POP32                                    2257      1A      26       2   .text       
+     MCU_init                                  2271      82     130       1   .text       
+     sc                                        22F3      21      33       1   .text       
+     prepare_stk                               2314      5B      91       1   .text       
+     init_timer                                236F       B      11       1   .text       
+     ticktimer                                 237A      29      41       1   .text       
+     install_task                              23A3      45      69       3   .text       
+     start_os                                  23E8       C      12       1   .text       
+     delay                                     23F4      34      52       2   .text       
+     os_inc_and_compare                        2428      4C      76       1   .text       
+     scheduler                                 2474      43      67       2   .text       
      NVPROT_INIT                               FFBD       1       1       0   .abs_section_ffbd
      NVOPT_INIT                                FFBF       1       1       0   .abs_section_ffbf
      _vect                                     FFC0      40      64       0   .abs_section_ffc0
@@ -1092,28 +1108,24 @@ UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
 RTSHC08.C.o (ansiis.lib):
-  _PUSH_ARGS_D _ENTER_UNARY_L _ENTER_UNARY_L64 _ENTER_UNARY_L64_4 
-  _ENTER_BINARY_L_RC _ENTER_BINARY_L_LC _ENTER_BINARY_L64 _ENTER_BINARY_L64_LC 
+  _PUSH_ARGS_D _ENTER_UNARY_L64 _ENTER_UNARY_L64_4 _ENTER_BINARY_L_RC 
+  _ENTER_BINARY_L_LC _ENTER_BINARY_L64 _ENTER_BINARY_L64_LC 
   _ENTER_BINARY_L64_RC _IDIVMOD _SPLITSIGN _k_is_k_plus_j_l _k_is_k_plus_j_i 
   _LSUB_k_is_k_minus_j _LAND_k_is_k_and_j _LOR_k_is_k_or_j _LXOR_k_is_k_xor_j 
   _LMUL_k_is_k_mul_j _LDIVMOD _NEG_L_HX _ABS_L_HX _SPLITSIGN_L 
   _LMODU_k_is_k_mod_j _LDIVU_k_is_k_div_j _LMODS_k_is_k_mod_j 
-  _LDIVS_k_is_k_div_j _LCMP_k_rel_j _CMP24_k_rel_j _BMULS _BDIVS _BMODS 
-  _IMUL_STAR08 _IDIVS_STAR08 _IDIVU_STAR08 _IMODS_STAR08 _IMODU_STAR08 _IDIVU_8 
-  _IMODU_8 _IASR _ILSR _ILSL _ICMP _LINC _LDEC _LNEG _LNOT _LADD_RC _LSUB 
-  _LSUB_LC _LSUB_RC _LAND _LAND_RC _LOR _LOR_RC _LXOR _LXOR_RC _LMUL _LMUL_RC 
-  _LDIVS _LDIVS_LC _LDIVS_RC _LDIVU _LDIVU_LC _LDIVU_RC _LMODS _LMODS_LC 
-  _LMODS_RC _LMODU _LMODU_LC _LMODU_RC _LASR _LLSR _LLSL _LCMP _LCMP_RC 
-  _PUSH_ARGS_24 _ENTER_BINARY_24_RC _ENTER_BINARY_24 _CMP24 _CMP24_RC _COPY 
-  _COPY_L _POP64 _STORE32 _STORE64 _SEXT8_32 _SEXT16_32 _CALL_STAR08 
-  _CALL_STAR08_FAR _Jump_Table_Addr _Jump_Table_Offset _Jump_Table_Header_Addr 
+  _LDIVS_k_is_k_div_j _CMP24_k_rel_j _BMULS _BDIVS _BMODS _IMUL_STAR08 
+  _IDIVS_STAR08 _IDIVU_STAR08 _IMODS_STAR08 _IMODU_STAR08 _IDIVU_8 _IMODU_8 
+  _IASR _ILSR _ILSL _ICMP _LDEC _LNEG _LNOT _LADD_RC _LSUB _LSUB_LC _LSUB_RC 
+  _LAND _LAND_RC _LOR _LOR_RC _LXOR _LXOR_RC _LMUL _LMUL_RC _LDIVS _LDIVS_LC 
+  _LDIVS_RC _LDIVU _LDIVU_LC _LDIVU_RC _LMODS _LMODS_LC _LMODS_RC _LMODU 
+  _LMODU_LC _LMODU_RC _LASR _LLSR _LLSL _LCMP_RC _PUSH_ARGS_24 
+  _ENTER_BINARY_24_RC _ENTER_BINARY_24 _CMP24 _CMP24_RC _COPY _COPY_L _POP64 
+  _STORE32 _STORE64 _SEXT8_32 _SEXT16_32 _CALL_STAR08 _CALL_STAR08_FAR 
+  _Jump_Table_Addr _Jump_Table_Offset _Jump_Table_Header_Addr 
   _Jump_Table_Header_Offset _Search_Table_16_Addr _Search_Table_16_Offset 
   _Search_Table_8_Addr _Search_Table_8_Offset _PUSH_CC _POP_CC 
   _CONV_FAR_TO_NEAR _CONV_FAR_TO_LINEAR _CONV_LINEAR_TO_FAR 
-port.c.o:
-  ticktimer 
-os.c.o:
-  os_inc_and_compare scheduler 
 NOT USED VARIABLES
 RTSHC08.C.o (ansiis.lib):
   _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 errno 
@@ -1121,7 +1133,7 @@ RTSHC08.C.o (ansiis.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0x23BE ---- SIZE       2 ---
+------- ROM-ADDRESS: 0x24B7 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1132,22 +1144,27 @@ Init                      USES _startupData loadByte
 _Startup                  USES __SEG_END_SSTACK Init main 
 task1                     USES delay 
 task2                     USES delay 
-main                      USES MCU_init task1 stk1 install_task task2 stk2 
-                                start_os 
+main                      USES MCU_init idle stk_idle install_task task1 stk1 
+                                task2 stk2 start_os 
 _ENTER_BINARY_L           USES _PUSH_ARGS_L 
+_LINC                     USES _ENTER_UNARY_L 
 _LADD                     USES _ENTER_BINARY_L _LADD_k_is_k_plus_j 
+_LCMP                     USES _ENTER_BINARY_L _LCMP_k_rel_j 
 MCU_init                  USES _SOPT1 _SPMSC1 _SPMSC2 _SPMSC3 _ICSTRM _ICSSC 
                                 _ICSC1 _ICSC2 _SCGC1 _SCGC2 _PTASE _PTBSE _PTCSE 
                                 _PTDSE _PTESE _PTFSE _PTGSE _PTHSE _PTJSE _PTADS 
                                 _PTBDS _PTCDS _PTDDS _PTEDS _PTFDS _PTGDS _PTHDS 
                                 _PTJDS 
-sc                        USES stk_os ct tcb it 
+sc                        USES stk_os ct tcb scheduler 
 init_timer                USES _TPM1SC _TPM1MOD 
+ticktimer                 USES _TPM1SC os_inc_and_compare stk_os ct tcb 
+                                scheduler 
 install_task              USES prepare_stk tcb it 
-start_os                  USES idle stk_idle install_task init_timer tcb 
-                                stk_os 
+start_os                  USES init_timer tcb stk_os 
 delay                     USES ct os_time _LADD tcb _POP32 
-_vect                     USES isrVlvd sc _Startup 
+os_inc_and_compare        USES os_time _LINC _POP32 tcb _LCMP it 
+scheduler                 USES tcb it ct 
+_vect                     USES ticktimer isrVlvd sc _Startup 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -1158,6 +1175,12 @@ DEPENDENCY TREE
  |  | 
  |  +- MCU_init            
  |  |    
+ |  +- idle                
+ |  |    
+ |  +- install_task        
+ |  |  | 
+ |  |  +- prepare_stk         
+ |  |       
  |  +- task1               
  |  |  | 
  |  |  +- delay               
@@ -1172,20 +1195,12 @@ DEPENDENCY TREE
  |  |     |       
  |  |     +- _POP32              
  |  |          
- |  +- install_task        
- |  |  | 
- |  |  +- prepare_stk         
- |  |       
  |  +- task2               
  |  |  | 
  |  |  +- delay                (see above)
  |  |     
  |  +- start_os            
  |     | 
- |     +- idle                
- |     |    
- |     +- install_task         (see above)
- |     |  
  |     +- init_timer          
  |          
  +- _Startup            
@@ -1198,10 +1213,30 @@ DEPENDENCY TREE
        
  _vect               
  | 
+ +- ticktimer           
+ |  | 
+ |  +- os_inc_and_compare  
+ |  |  | 
+ |  |  +- _LINC               
+ |  |  |  | 
+ |  |  |  +- _ENTER_UNARY_L      
+ |  |  |       
+ |  |  +- _POP32               (see above)
+ |  |  |  
+ |  |  +- _LCMP               
+ |  |     | 
+ |  |     +- _ENTER_BINARY_L      (see above)
+ |  |     |  
+ |  |     +- _LCMP_k_rel_j       
+ |  |          
+ |  +- scheduler           
+ |       
  +- isrVlvd             
  |    
  +- sc                  
- |    
+ |  | 
+ |  +- scheduler            (see above)
+ |     
  +- _Startup             (see above)
     
 *********************************************************************************************
@@ -1210,6 +1245,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 898
+Number of blocks to be downloaded: 6
+Total size of all blocks to be downloaded: 1147
 

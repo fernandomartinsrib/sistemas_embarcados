@@ -5,15 +5,13 @@ interrupt void sc(void){
     SAVE_PC();
     tcb[ct].stk = stk_os;
     
-    ct++;
-    if(ct>=it) ct=0;
+    //ct++;
+    //if(ct>=it) ct=0;
     
-    stk_os = tcb[ct].stk;
-    //stk_os = scheduler();
+    //stk_os = tcb[ct].stk;
+    stk_os = scheduler();
     RESTORE_SP();
 }
-
-// testando git.
 
 cpu_t *stk_os;
 

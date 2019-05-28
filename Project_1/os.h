@@ -10,7 +10,7 @@ typedef struct tcb_t{
 }tcb_t;
 
 
-void install_task(task_t task, cpu_t *stk, int stk_size, int prio);
+void install_task(task_t task, cpu_t *stk, int stk_size, cpu_t prio);
 cpu_t *scheduler(void);
 void delay(long long);
 cpu_t os_inc_and_compare(void);
